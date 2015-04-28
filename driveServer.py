@@ -51,8 +51,8 @@ while 1:
  if singleData==1:
   left=64
   right=64
-  x=int(((float(0.00062*(ord(data[0])-60)**3)+0.1*ord(data[0])+120)/119)*127)
-  y=127-int(((float(0.00062*(ord(data[1])-60)**3)+0.1*ord(data[1])+120)/119)*127)
+  x=int(((float(0.000065*(ord(data[0])-127)**3)+127)/255)*127)
+  y=127-int(((float(0.000065*(ord(data[1])-127)**3)+127)/255)*127)
   if x<64:
    left=y-(64-x)
    right=y+64-x
