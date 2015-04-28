@@ -2,6 +2,7 @@
 import socket
 import serial
 import time
+import os
 
 def limit(xVal):
  if 62<xVal<68:
@@ -30,10 +31,11 @@ sockSingle.bind(('',4444))
 sockSingle.setblocking(0)
 singleData=0
 
-#binding for dual joystick
-sockDual=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sockDual.bind(('',4445))
-sockDual.setblocking(0)
+#local socket for wii input
+os.remove('/tmp/driveSocket')
+sockLocal=socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+sockLocal.bind('/tmp/driveSocket')
+sockLocal.setblocking(0)
 dualData=0
 
 lastSet=0
@@ -64,13 +66,13 @@ while 1:
   timeout=0
 #Dual stick mode
  try:
-  data,addr=sockDual.recvfrom(1024)
+  dataLocal,addr=sockLocal.recvfrom(1024)
   dualData=1
  except:
   pass
  if dualData==1:
-  left=int(((float(0.000065*(ord(data[0])-127)**3)+127)/255)*127)
-  right=int(((float(0.000065*(ord(data[2])-127)**3)+127)/255)*127)
+  left=int(((float(0.000065*(ord(dataLocal[0])-127)**3)+127)/255)*127)
+  right=int(((float(0.000065*(ord(dataLocal[1])-127)**3)+127)/255)*127)
   print str(limit(left))+','+str(limit(right))
   go(left,right)
   dualData=0
